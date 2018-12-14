@@ -171,8 +171,8 @@ class ega {
     var _Wvec = [];
     var _lambda1 = BigInteger.ONE;
     var _lambda2 = BigInteger.ONE;
-    console.log(_lambda1);
     var wbeta = 0.;
+    // Update exponentials
     for (i = 0; i < this.k; i++) {
       var a = new BigInteger(this.g.toString());
       bigIntPowInt(a, this.avec[i]);
@@ -182,26 +182,27 @@ class ega {
       _Cvec.push(c);
       var u = new BigInteger(this.g.toString());
       bigIntPowInt(u, this.uvec[i]);
+      u.multiply(u);
       _Uvec.push(u);
       var w = new BigInteger(this.g.toString());
       bigIntPowInt(w, this.gamma * this.wvec[i]);
       _Wvec.push(w);
       this.X[i] = parseBigInt(this.X[i]);
       bigIntPowIntNeg(this.X[i], Math.abs(this.wvec[piinverse[i]] - this.uvec[i]));
-      console.log(this.X[i]);
-      _lambda1.multiply(this.X[i]);
-      console.log(_lambda1);
+      this.X[i].multiply(_lambda1);
+      _lambda1 = this.X[i];
       this.Y[i] = parseBigInt(this.Y[i]);
       bigIntPowIntNeg(this.Y[i], Math.abs(this.wvec[piinverse[i]] - this.uvec[i]));
-      _lambda2.multiply(this.Y[i]);
+      this.Y[i].multiply(_lambda2);
+      _lambda2 = this.Y[i];
       wbeta += this.wvec[i] * this.betas[this.pi[i]];
     }
     this.Uvec = _Uvec;
     this.Wvec = _Wvec;
-    console.log(this.g, this.taunaught, wbeta, this._lambda1);
-    this.lambda1 = Math.pow(this.g, this.taunaught + wbeta) * _lambda1;
-    this.lambda2 = Math.pow(this.h, this.taunaught + wbeta) * _lambda2;
-    console.log(this.lambda1, this.lambda2);
+    _lambda1.multiply(new BigInteger(Math.pow(this.g, this.taunaught + wbeta).toString()));
+    _lambda2.multiply(new BigInteger(Math.pow(this.h, this.taunaught + wbeta).toString()));
+    this.lambda1 = _lambda1;
+    this.lambda2 = _lambda2;
   }
 
   // How to generate array of randoms on blockchain?
@@ -212,7 +213,9 @@ class ega {
     for (var i = 0; i < this.k; i++) {
       var pi = getRandomInt(this.p);
       _pvec.push(pi);
-      Betas.push(Math.pow(this.g, pi) / this.Uvec[i]);
+      var num = new BigInteger(Math.pow(this.g, pi).toString());
+      Betas.push(num.divide(this.Uvec[i]));
+      // Betas.push(Math.pow(this.g, pi) / this.Uvec[i]);
     }
     this.pvec = _pvec;
     // Send Betas to contract
@@ -225,9 +228,13 @@ class ega {
     for (var i = 0; i < this.k; i++) {
       bvec.push(this.pvec[i] - this.uvec[i]);
     }
+    // Update exponentials
     for (i = 0; i < this.k; i++) {
       dvec.push(this.gamma * bvec[this.pi[i]]);
-      _Dvec.push(Math.pow(this.g, dvec[i]));
+      var D = new BigInteger(this.g.toString());
+      bigIntPowInt(D, dvec[i]);
+      _Dvec.push(D);
+      // _Dvec.push(Math.pow(this.g, dvec[i]));
     }
     this.bvec = bvec;
     this.dvec = dvec;
@@ -267,13 +274,13 @@ class ega {
 
   ega7() {
     var Gamma = new BigInteger(this.g.toString());
-    bigIntPowInt(Gamma, this.gamma);
+    Gamma = bigIntPowInt(Gamma, this.gamma);
 
 
     var phi1 = 1;
     var phi2 = 1;
     // console.log(this.X, this.Xbar, this.Y, this.Ybar, this.sigmas);
-    // console.log(this.pvec, Gamma, this.Wvec, this.Dvec);
+    // console.log("P", this.pvec, "G", Gamma, "W", this.Wvec, "D", this.Dvec);
     // createEncryptedValue(this.X[0]);
     // console.log(Xbar[0]);
     for (var i = 0; i < this.X.length; i++) {
@@ -291,9 +298,11 @@ class ega {
     // Verify
     var verified = true;
     for (i = 0; i < this.X.length; i++) {
-      // console.log("LHS", Math.pow(Gamma, this.sigmas[i]));
-      // console.log("RHS", this.Wvec[i], this.Dvec[i], this.Wvec[i] * this.Dvec[i]);
-      if (Math.pow(Gamma, this.sigmas[i]) != (this.Wvec[i] * this.Dvec[i])) verified = false;
+      bigIntPowInt(Gamma, this.sigmas[i]);
+      console.log("LHS", Gamma);
+      console.log("RHS", this.Wvec[i], this.Dvec[i], this.Wvec[i] * this.Dvec[i]);
+      if (Gamma.equals(this.Wvec[i].multiply(this.Dvec[i]))) verified = false;
+      // if (Math.pow(Gamma, this.sigmas[i]) != (this.Wvec[i] * this.Dvec[i])) verified = false;
     }
     // Verify on contract
   }
@@ -478,11 +487,10 @@ function EVMultEV(bigint1, bigint2) {
 }
 
 function bigIntPowInt(bigint, powInt) {
-  // console.log(bigint);
-  // console.log(powInt);
   for (var i = 1; i < powInt; i++) {
     bigint.multiply(bigint);
   }
+  return bigint;
 }
 
 function bigIntPowIntNeg(bigint, powInt) {
