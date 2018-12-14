@@ -1,0 +1,21 @@
+{
+  "name": "cs191",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "elgamal": "^0.3.0",
+    "express": "^4.16.4",
+    "jsbn": "^1.1.0",
+    "node-forge": "^0.7.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node app.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
