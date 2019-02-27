@@ -4,6 +4,7 @@
 <head>
   <title>Mixing network</title>
   <!-- <link rel="stylesheet" type="text/css" href="style.css">-->
+  <script type="text/javascript" src="./sjcl.js"></script>
   <script src="web3.min.js"></script>
   <script src="abi-decoder.js"></script>
 </head>
@@ -11,8 +12,41 @@
 <body>
   <h1>Mixing Network</h1>
 
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> -->
   <script src="script.js"></script>
 </body>
+<script>
+  // var pair = sjcl.ecc.elGamal.generateKeys(256, 0);
+  // var pub = sjcl.ecc.deserialize(pair.pub.serialize());
+  // var rt = {};
+  // var ct = sjcl.encrypt(pub, "Hello World!", null, rt);
+  // var curve = sjcl.ecc.curves['c256'];
+  // var sec = sjcl.bn.random(curve.r, 0);
+  // var pub = curve.G.mult(sec);
+  // alert(sec);
+  // alert(pub);
+  // var private_message = "Apollo is cute";
+  // var k = sjcl.bn.random(curve.r, 0);
+  // // var secret_pair = [curve.G.mult(k), private_message + curve.G.mult(sec).mult(k)];
+  // // alert(secret_pair);
+  // encrypt_it(private_message, pub);
+
+  // function encrypt_it(message, publicKey) {
+  //   var k = sjcl.bn.random(curve.r, 0);
+  //   var second = publicKey.toJac().mult(k, publicKey).add(message);
+  //   var secret_pair = [curve.G.mult(k), second];
+  //   alert(secret_pair);
+  // };
+  // // alert(ct);
+  // alert(sjcl.mode);
+  // alert(rt.salt);
+  // var plaintext = sjcl.decrypt(pair.sec, ct);
+  // var curve = sjcl.ecc.curves['c256'];
+  // var ran = sjcl.bn.random(curve.r, 0);
+
+  // alert(ct)
+  // alert(plaintext)
+  // alert(ran);
+</script>
 
 </html>

@@ -111,11 +111,12 @@ class ega {
     this.pi = _pi;
     this.betas = _betas;
     this.k = this.inputs.length;
+    this.p = 827;
+    this.q = 823;
+    // Perhaps use crypto.generateRandom();
     // var keyPair = forge.pki.rsa.generateKeyPair(4096);
     // this.p = keyPair.privateKey.p;
     // this.q = keyPair.privateKey.q;
-    this.p = 827;
-    this.q = 823;
     // var keyPair2 = forge.pki.rsa.generateKeyPair(4096);
     // this.g = keyPair.privateKey.p;
     // this.h = keyPair.privateKey.q;
@@ -148,23 +149,6 @@ class ega {
     this.uvec = _uvec;
     this.wvec = _wvec;
     this.avec = _avec;
-    // $.ajax({
-    //   url: '/ega1',
-    //   type: 'POST',
-    //   contentType: 'application/json',
-    //   async: false,
-    //   data: JSON.stringify({
-    //     "g": this.g, "avec": this.avec,
-    //     "gamma": this.gamma, "pi": this.pi,
-    //     "uvec": this.uvec, "wvec": this.wvec,
-    //     "piinverse": this.piinverse, "X": this.X,
-    //     "Y": this.Y, "betas": this.betas,
-    //   }),
-    //   success: function (response) {
-    //     console.log("RESP", response);
-    //     console.log("THeta", this.Thetas);
-    //   }
-    // });
     var _Avec = [];
     var _Cvec = [];
     var _Uvec = [];
@@ -275,14 +259,8 @@ class ega {
   ega7() {
     var Gamma = new BigInteger(this.g.toString());
     Gamma = bigIntPowInt(Gamma, this.gamma);
-
-
     var phi1 = 1;
     var phi2 = 1;
-    // console.log(this.X, this.Xbar, this.Y, this.Ybar, this.sigmas);
-    // console.log("P", this.pvec, "G", Gamma, "W", this.Wvec, "D", this.Dvec);
-    // createEncryptedValue(this.X[0]);
-    // console.log(Xbar[0]);
     for (var i = 0; i < this.X.length; i++) {
       this.Xbar[i] = parseBigInt(this.Xbar[i]);
       this.X[i] = parseBigInt(this.X[i]);
