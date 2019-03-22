@@ -128,7 +128,9 @@ class ega {
     this.pvec = [];
     this.Bvec = [];
     for (var i = 0; i < this.inputs.length; i++) {
-      this.pvec.push(new sjcl.bn(hash.toString()));
+      // this.pvec.push(new sjcl.bn(i + 1));
+      this.pvec.push(sjcl.bn.random(curve.r, 0));
+      // this.pvec.push(new sjcl.bn(hash.toString()));
       hash = this.pvec[i];
       this.Bvec.push(this.g.mult(hash).toJac().add(this.Uvec[i].negate()).toAffine());
     }
@@ -152,7 +154,8 @@ class ega {
   ega4() {
     var hash = sjcl.hash.sha256.hash(this.Avec + this.Cvec + this.Uvec + this.Wvec + this.Gamma
       + this.Lambda1 + this.Lambda2 + this.pvec + this.Dvec);
-    this.lambda = new sjcl.bn(hash.toString());
+    // this.lambda = new sjcl.bn(hash.toString());
+    this.lambda = sjcl.bn.random(curve.r, 0);
   }
 
   ega5() {
